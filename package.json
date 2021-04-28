@@ -2,8 +2,9 @@
   "name": "challenge-api",
   "version": "1.0.0",
   "description": "JS challenge for ALKEMY",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "devstart": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,8 @@
     "express": "^4.17.1",
     "md5": "^2.3.0",
     "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
