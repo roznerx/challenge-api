@@ -27,7 +27,26 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         "ID"	INTEGER NOT NULL,
         "TYPE"	TEXT NOT NULL,
         PRIMARY KEY("ID" AUTOINCREMENT)
-    )`);
+    )`, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        var sql = "select count(*) as count from OPERATIONTYPES";
+        var params = [];
+        db.all(sql, params, (err, rows) => {
+          if (err) {
+            console.log("Error executing select of OPERATIONTYPES", err);
+            return;
+          }
+  
+          if (rows[0].count == 0) {
+            var insert = "INSERT INTO OPERATIONTYPES (TYPE) VALUES (?)";
+            db.run(insert, ["Income"]);
+            db.run(insert, ["Expenses"]);
+          }
+        });
+      }
+    })
 
     // OPERATIONS
 
@@ -40,30 +59,10 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             "TYPEID"	INTEGER NOT NULL,
             PRIMARY KEY("ID" AUTOINCREMENT)
             FOREIGN KEY(typeid) REFERENCES operationtypes(id)
-        );`,
-
-      (err) => {
-        if (err) {
-          // Table already created
-        } else {
-          var sql = "select count(*) as count from OPERATIONTYPES"; 
-          var params = [];
-          db.all(sql, params, (err, rows) => {
-            if (err) {
-              console.log("Error executing select of OPERATIONTYPES", err);
-              return;
-            }
-
-            if (rows[0].count == 0) {
-              var insert =
-                "INSERT INTO OPERATIONTYPES (DESCRIPTION) VALUES (?)";
-              db.run(insert, ["Income"]);
-              db.run(insert, ["Expenses"]);
-            }
-          });
-        }
-      }
+        );`
     );
+
+   
   }
 });
 
