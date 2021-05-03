@@ -21,32 +21,35 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
 
     // Table creation
 
-    // OPERATION TYPES
+    // OPERATIONTYPES
 
-    db.run(`CREATE TABLE IF NOT EXISTS "OPERATIONTYPES" (
+    db.run(
+      `CREATE TABLE IF NOT EXISTS "OPERATIONTYPES" (
         "ID"	INTEGER NOT NULL,
         "TYPE"	TEXT NOT NULL,
         PRIMARY KEY("ID" AUTOINCREMENT)
-    )`, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        var sql = "select count(*) as count from OPERATIONTYPES";
-        var params = [];
-        db.all(sql, params, (err, rows) => {
-          if (err) {
-            console.log("Error executing select of OPERATIONTYPES", err);
-            return;
-          }
-  
-          if (rows[0].count == 0) {
-            var insert = "INSERT INTO OPERATIONTYPES (TYPE) VALUES (?)";
-            db.run(insert, ["Income"]);
-            db.run(insert, ["Expenses"]);
-          }
-        });
+    )`,
+      (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          var sql = "select count(*) as count from OPERATIONTYPES";
+          var params = [];
+          db.all(sql, params, (err, rows) => {
+            if (err) {
+              console.log("Error executing select of OPERATIONTYPES", err);
+              return;
+            }
+
+            if (rows[0].count == 0) {
+              var insert = "INSERT INTO OPERATIONTYPES (TYPE) VALUES (?)";
+              db.run(insert, ["Income"]);
+              db.run(insert, ["Expenses"]);
+            }
+          });
+        }
       }
-    })
+    );
 
     // OPERATIONS
 
@@ -61,8 +64,6 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             FOREIGN KEY(typeid) REFERENCES operationtypes(id)
         );`
     );
-
-   
   }
 });
 
